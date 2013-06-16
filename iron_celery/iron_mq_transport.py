@@ -38,8 +38,13 @@ class IronMQChannel(BaseChannel):
     def _get(self, queue):
         messages = self.client.getMessage(queue)
 
-        if len(messages["messages"]) == 0:
+        # 'not' not only handles empty lists but anything
+        # valued as None
+        if not messages["messages"]:
             raise Empty()
+
+        #if len(messages["messages"]) == 0:
+        #    raise Empty()
 
         message = messages["messages"][0]
         parsed_message = loads(message['body'])
